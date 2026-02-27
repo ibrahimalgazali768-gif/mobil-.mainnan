@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplikasi Mobil - Kelompok 1</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+/* ===== STYLE GLOBAL ===== */
+body { background: #f8f9fa; }
+
+/* Navbar logo */
+.navbar-brand img {
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+/* Card Mobil */
+.card-mobil {
+    transition: 0.4s ease;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(40px);
+}
+.card-mobil.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.card-mobil:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* Gambar di card */
+.card-mobil img {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Section Kelompok */
+.id {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #0077b6, #00b4d8);
+    color: white;
+    text-align: center;
+}
+.id ul { list-style: none; padding: 0; }
+.id li {
+    background: white;
+    color: #023e8a;
+    margin: 10px auto;
+    padding: 12px 25px;
+    border-radius: 30px;
+    width: 200px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.id li:hover { transform: scale(1.05); background: #90e0ef; }
+
+/* Animasi Fade */
+.fade-in { opacity: 0; transform: translateY(30px); transition: 0.8s ease; }
+.fade-in.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+<div class="container d-flex align-items-center"></div>
+<span class="navbar-brand mb-0 h1">Aplikasi Mobil</span>
+</div>
+</nav>
+
+<section class="py-5 bg-primary text-white text-center fade-in">
+<h2>Selamat Datang Di Aplikasi Mobil</h2>
+<p>Kami Menjual Mobil Berkualitas</p>
+</section>
+
+<div class="container mt-5">
+<div class="row">
+
+<!-- Simulasi Kredit -->
+<div class="col-md-4">
+<div class="card shadow">
+<div class="card-body">
+<h5>Simulasi Kredit</h5>
+
+<input type="number" id="harga" class="form-control mb-2" placeholder="Harga Mobil">
+<input type="number" id="dp" class="form-control mb-2" value="20">
+<select id="tenor" class="form-select mb-2">
+<option value="1">1 Tahun</option>
+<option value="3">3 Tahun</option>
+<option value="5">5 Tahun</option>
+</select>
+
+<button class="btn btn-success w-100" onclick="hitung()">Hitung</button>
+<div id="hasil" class="mt-3"></div>
+
+</div>
+</div>
+</div>
+
+<!-- List Mobil -->
+<div class="col-md-8">
+<div class="row" id="listMobil"></div>
+</div>
+
+</div>
+</div>
+
+<!-- Nama Kelompok -->
+<section class="id fade-in">
+<h2>Nama Kelompok</h2>
+<ul>
+<li>Gedong</li>
+<li>Captain Esa</li>
+<li>BaimWong</li>
+</ul>
+</section>
+
+<footer class="bg-dark text-white text-center py-3">
+© 2026 Aplikasi Mobil
+</footer>
+
+<script>
+// ============================
+// DATA MOBIL
+// ============================
+const mobil = [
+    {nama: "Toyota Avanza", harga: 200000000, keyword: "toyota avanza car"},
+    {nama: "Honda Brio", harga: 180000000, keyword: "honda brio car"},
+    {nama: "Mitsubishi Pajero", harga: 550000000, keyword: "mitsubishi pajero car"},
+    {nama: "Toyota Fortuner", harga: 600000000, keyword: "toyota fortuner car"},
+    {nama: "Suzuki Ertiga", harga: 220000000, keyword: "suzuki ertiga car"}
+];
+
+// ============================
+// TAMPILKAN MOBIL
+// ============================
+const list = document.getElementById("listMobil");
+
+mobil.forEach((item, index) => {
+    const imgUrl = 'download.png';
+    const card = `
+    <div class="col-md-4 mb-4">
+        <div class="card card-mobil shadow-sm">
+            <img src="${imgUrl}" class="card-img-top" alt="${item.nama}">
+            <div class="card-body text-center">
+                <h6>${item.nama}</h6>
+                <p class="text-danger fw-bold">Rp ${item.harga.toLocaleString('id-ID')}</p>
+                <button class="btn btn-primary btn-sm w-100"
+                    onclick="pilihMobil(${item.harga})">
+                    Pilih
+                </button>
+            </div>
+        </div>
+    </div>
+    `;
+    list.innerHTML += card;
+});
+
+// Animasi muncul satu per satu
+window.addEventListener("load", () => {
+    const cards = document.querySelectorAll(".card-mobil");
+    cards.forEach((card, index) => {
+        setTimeout(() => { card.classList.add("show"); }, index * 200);
+    });
+    document.querySelectorAll(".fade-in").forEach(el => el.classList.add("show"));
+});
+
+// ============================
+// PILIH MOBIL
+// ============================
+function pilihMobil(harga) {
+    document.getElementById("harga").value = harga;
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ============================
+// HITUNG KREDIT
+// ============================
+function hitung() {
+    const harga = document.getElementById("harga").value;
+    const dp = document.getElementById("dp").value;
+    const tenor = document.getElementById("tenor").value;
+    const nominalDP = (dp / 100) * harga;
+    const angsuran = (harga - nominalDP) / (tenor * 12);
+
+    document.getElementById("hasil").innerHTML = `
+        <div class="alert alert-success">
+            Angsuran per bulan:<br>
+            <strong>Rp ${Math.round(angsuran).toLocaleString('id-ID')}</strong>
+        </div>
+    `;
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
